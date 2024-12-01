@@ -1,1 +1,5 @@
-# advent-of-code-2024
+# Advent of Code 2024
+
+ref: https://adventofcode.com/2024
+
+My solutions in Python :)

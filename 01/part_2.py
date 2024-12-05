@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 https://adventofcode.com/2024/day/1
 """
@@ -16,20 +17,7 @@ def parse_input(s: str) -> tuple[list[int], list[int]]:
     return c1, c2
 
 
-def part1(s: str) -> int:
-    score = 0
-
-    c1, c2 = parse_input(s)
-    c1.sort()
-    c2.sort()
-
-    for i, j in zip(c1, c2):
-        score += abs(i - j)
-
-    return score
-
-
-def part2(s: str) -> int:
+def solve(s: str) -> int:
     score = 0
 
     c1, c2 = parse_input(s)
@@ -39,10 +27,3 @@ def part2(s: str) -> int:
         score += counter_c2[i] * i
 
     return score
-
-
-if __name__ == "__main__":
-    with open("input.txt") as f:
-        INPUT = f.read()
-    print(f"{part1(INPUT) = }")
-    print(f"{part2(INPUT) = }")

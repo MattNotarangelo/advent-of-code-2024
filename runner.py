@@ -17,4 +17,6 @@ def runner(name: str, f: Callable, path: str):
         print(f"> expected output: {sample_output_part}")
         print(f"> actual output: {f(sample_input)}")
 
-    print(f"part {name} question output: {f(question_input)}")
+    # sample must pass for question to run
+    if res:
+        print(f"part {name} question output: {f(question_input)}")

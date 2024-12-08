@@ -9,13 +9,14 @@ def runner(name: str, f: Callable, path: str):
     sample_output_part = open(f"{path}/sample_output_part_{name}.txt").read().strip()
     question_input = open(f"{path}/question_input.txt").read().strip()
 
-    res = str(f(sample_input)) == sample_output_part
+    sample_result = f(sample_input)
+    res = str(sample_result) == sample_output_part
     if res:
         print(f"part {name} sample passed")
     else:
         print(f"part {name} sample FAILED")
         print(f"> expected output: {sample_output_part}")
-        print(f"> actual output: {f(sample_input)}")
+        print(f"> actual output: {sample_result}")
 
     # sample must pass for question to run
     if res:

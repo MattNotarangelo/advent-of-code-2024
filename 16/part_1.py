@@ -1,8 +1,5 @@
 # https://adventofcode.com/2024/day/16
-import sys
-
-print(sys.getrecursionlimit())
-sys.setrecursionlimit(5000)
+import collections
 
 inf = float("inf")
 MAP = {
@@ -21,8 +18,6 @@ class Solution:
     def __init__(self):
         self.start = [-1, -1]
         self.end = [-1, -1]
-        self.direction = (1, 0)
-        self.seen = {}
         self.array = []
         self.min_score = inf
 
@@ -35,31 +30,35 @@ class Solution:
                 if self.array[y][x] == "E":
                     self.end = [x, y]
 
-    def dfs(self, position, direction, score):
-        if self.array[position[1]][position[0]] == "#":
-            return
-        if position == self.end:
-            self.min_score = min(self.min_score, score)
-            return
+    def bfs(self):
 
-        tupled_pos = tuple(position)
-        if tupled_pos in self.seen:
-            if self.seen[tupled_pos] <= score:
-                return
-            else:
-                self.seen[tupled_pos] = score
-        else:
-            self.seen[tupled_pos] = score
+        #         x  y  d  s  path
+        stack = [(self.start[0], self.start[1], (1, 0), 0, [])]
+        seen = {}
 
-        self.dfs(move(position, direction), direction, score + 1)
-        self.dfs(move(position, MAP[direction]["L"]), MAP[direction]["L"], score + 1001)  # rotate and move
-        self.dfs(move(position, MAP[direction]["R"]), MAP[direction]["R"], score + 1001)  # rotate and move
-        self.dfs(move(position, MAP[MAP[direction]["R"]]["R"]), MAP[MAP[direction]["R"]]["R"], score + 2001)  # rotate and move
+        while len(stack) > 0:
+            x, y, direction, score, path = stack.pop(0)
+            if self.array[y][x] == "#":
+                continue
+            if (x, y, direction) in seen and seen[(x, y, direction)] <= score:
+                continue
+            if score > self.min_score:
+                continue
+
+            if (x, y) == (self.end[0], self.end[1]):
+                self.min_score = min(self.min_score, score)
+                continue
+
+            seen[(x, y, direction)] = score
+            print(x, y, direction)
+            stack.append((x + direction[0], y + direction[1], direction, score + 1, path[:] + [(x, y)]))  # forward
+            stack.append((x, y, MAP[direction]["L"], score + 1000, path[:]))  # rotate left
+            stack.append((x, y, MAP[direction]["R"], score + 1000, path[:]))  # rotate left
 
     def solve(self, s):
         self.parse_input(s)
 
-        self.dfs(self.start, self.direction, 0)
+        self.bfs()
         return self.min_score
 
 

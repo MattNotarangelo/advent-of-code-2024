@@ -1,4 +1,5 @@
 # https://adventofcode.com/2024/day/18
+import collections
 
 inf = float("inf")
 SIZE = (71, 71)
@@ -17,10 +18,13 @@ class Solution:
             self.bytes.append((int(i.split(",")[0]), int(i.split(",")[1])))
 
     def bfs(self):
-        stack = [(0, 0, 0, [])]
+        # stack contains tuple of (x_pos, y_pos, score, path)
+        stack: collections.deque[tuple[int, int, int, list]] = collections.deque()
+        stack.append((0, 0, 0, []))
         seen = set()
+
         while len(stack) > 0:
-            x, y, score, path = stack.pop(0)
+            x, y, score, path = stack.popleft()
             if x < 0 or x >= SIZE[0] or y < 0 or y >= SIZE[1]:
                 continue
             if self.array[y][x] == "#":
@@ -70,7 +74,6 @@ def solve(s):
         inst.parse_input(s)
         inst.bytes_fallen = m
         res = inst.solve()
-        print(m)
         if res == inf:
             r = m - 1
         else:

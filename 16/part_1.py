@@ -32,12 +32,13 @@ class Solution:
 
     def bfs(self):
 
-        #         x  y  d  s  path
-        stack = [(self.start[0], self.start[1], (1, 0), 0, [])]
+        # stack contains tuple of (x_pos, y_pos, direction, score, path)
+        stack: collections.deque[tuple[int, int, tuple, int, list]] = collections.deque()
+        stack.append((self.start[0], self.start[1], (1, 0), 0, []))
         seen = {}
 
         while len(stack) > 0:
-            x, y, direction, score, path = stack.pop(0)
+            x, y, direction, score, path = stack.popleft()
             if self.array[y][x] == "#":
                 continue
             if (x, y, direction) in seen and seen[(x, y, direction)] <= score:
@@ -50,7 +51,6 @@ class Solution:
                 continue
 
             seen[(x, y, direction)] = score
-            print(x, y, direction)
             stack.append((x + direction[0], y + direction[1], direction, score + 1, path[:] + [(x, y)]))  # forward
             stack.append((x, y, MAP[direction]["L"], score + 1000, path[:]))  # rotate left
             stack.append((x, y, MAP[direction]["R"], score + 1000, path[:]))  # rotate left

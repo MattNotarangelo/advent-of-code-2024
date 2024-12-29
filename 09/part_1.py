@@ -7,13 +7,11 @@ def parse_input(s):
 
 def solve(s):
     s = parse_input(s)
-    print(s)
     stack = []
     res = []
 
     for i in range(len(s)):
         if i % 2 == 0:
-            print(s[i])
             stack.extend([i // 2] * s[i])
 
     stack_size = len(stack)

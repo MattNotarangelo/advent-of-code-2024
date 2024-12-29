@@ -5,28 +5,49 @@ def parse_input(s):
     return [int(i) for i in list(s.strip())]
 
 
+def repr(s) -> str:
+    ret = ""
+    for i in s:
+        ret += i["quantity"] * str(i["item"])
+    return ret
+
+
+def calculate_score(s):
+    score = 0
+    for i in range(len(s)):
+        if s[i] != ".":
+            score += i * int(s[i])
+    return score
+
+
 def solve(s):
-    return 0
     s = parse_input(s)
-    print(s)
-    file_stack = []
-    free_stack = []
-    res = []
-
+    stack = []
     for i in range(len(s)):
         if i % 2 == 0:
-            file_stack.append([i // 2] * s[i])
+            stack.append({"item": i // 2, "quantity": s[i]})
         if i % 2 == 1:
-            free_stack.append(["."] * s[i])
+            stack.append({"item": ".", "quantity": s[i]})
+    ret = stack.copy()
 
-    stack_size = len(file_stack)
-    for i in range(len(s)):
-        if i % 2 == 0:
-            res.extend([i // 2] * s[i])
-        else:
-            for _ in range(s[i]):
-                if file_stack:
-                    res.append(file_stack.pop())
+    for i in stack[::-1]:
+        pos = 0
+        for l in stack:
+            if l == i:
+                break
+            pos += l["quantity"]
+        to_check_name = i["item"]
+        if to_check_name == ".":
+            continue
+        to_check_quantity = i["quantity"]
+        for j in range(len(ret)):
+            if ret[j]["item"] == "." and ret[j]["quantity"] >= to_check_quantity and j < pos:
+                for k in range(len(ret)):
+                    if ret[k] == i:
+                        ret[k]["item"] = "."
 
-    res = res[:stack_size]
-    return sum([i * res[i] for i in range(len(res))])
+                ret[j]["quantity"] -= to_check_quantity
+                ret.insert(j, {"item": to_check_name, "quantity": to_check_quantity})
+                break
+
+    return calculate_score(repr(ret))
